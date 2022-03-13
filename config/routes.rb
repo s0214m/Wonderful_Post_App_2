@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :users, controllers: {sessions: 'users/sessions'}
   root :to => 'articles#index'
   resources :articles
   resources :sample_articles
