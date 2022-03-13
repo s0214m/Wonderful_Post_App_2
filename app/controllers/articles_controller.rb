@@ -1,13 +1,15 @@
 class ArticlesController < ApplicationController
-  before_action :set_article, only: %i[ show edit update destroy ]
-
+  before_action :set_article, only: %i[ edit update destroy ]
+  skip_before_action :authenticate_user!, only: %i[ index show ]
   # GET /articles
+
   def index
     @articles = Article.all
   end
 
   # GET /articles/:id
   def show
+    @article = Article.find(params[:id])
   end
 
   # GET /articles/new
@@ -21,18 +23,18 @@ class ArticlesController < ApplicationController
 
   # POST /articles
   def create
-    @article = Article.new(article_params)
-
-    respond_to do |format|
-      if @article.save
-        format.html { redirect_to article_url(@article), notice: "#{t('activerecord.models.article')}を作成しました" }
-      else
-        format.html { render :new, status: :unprocessable_entity }
+    @article = current_user.articles.new(article_params)
+      respond_to do |format|
+        if @article.save
+          format.html { redirect_to article_url(@article), notice: "#{t('activerecord.models.article')}を作成しました" }
+        else
+          format.html { render :new, status: :unprocessable_entity }
+        end
       end
-    end
   end
 
   # PATCH/PUT /articles/1 or /articles/1.json
+
   def update
     respond_to do |format|
       if @article.update(article_params)
@@ -46,7 +48,6 @@ class ArticlesController < ApplicationController
   # DELETE /articles/1 or /articles/1.json
   def destroy
     @article.destroy
-
     respond_to do |format|
       format.html { redirect_to root_path, notice: "#{t('activerecord.models.article')}を削除しました" }
     end
@@ -55,7 +56,7 @@ class ArticlesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_article
-      @article = Article.find(params[:id])
+      @article = Article.find_by(id: params[:id], user_id: current_user.id)
     end
 
     # Only allow a list of trusted parameters through.
