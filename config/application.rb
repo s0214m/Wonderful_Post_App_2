@@ -41,6 +41,6 @@ module WonderfulPostApp2
       g.helper false
       g.test_framework false
     end
-
+    config.middleware.use ActionDispatch::Flash
   end
 end
