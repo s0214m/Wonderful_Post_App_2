@@ -4,6 +4,8 @@ class Article < ApplicationRecord
 
   belongs_to :user
 
+  has_many :tag_articles, dependent: :destroy
+  has_many :tags, through: :tag_articles
   def self.search(title)
     where(["title like?", "%#{title}%"])
   end
