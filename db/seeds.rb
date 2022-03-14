@@ -14,6 +14,10 @@
 #本文:No.1: user001の記事の本文
 #seedファイルを複数回実行しても、同じ内容のデータが出来ないように制御してください
 
+array = %w(学習 就活 雑学 その他)
+tags = array.map {|tag| Tag.find_or_create_by!(name: tag)}
+tag_ids= tags.map {|tag| tag.id}
+
 users =
 3.times.map do |i|
   User.find_or_create_by!(email: "user00#{i+1}@test.com") do |user|
@@ -26,6 +30,7 @@ users.each do |user|
   50.times do |i|
     user.articles.find_or_create_by!(title: "No.#{i+1}:#{user_name}の記事") do |article|
       article.content = "#{user_name}の記事の本文"
+      article.tag_ids = tag_ids
     end
   end
 end
@@ -39,6 +44,10 @@ end
 #   end
 # end
 
+# array = %w(学習 就活 雑学 その他)
+# tags = array.map {|tag| Tag.find_or_create_by!(name: tag)}
+# tag_ids= tags.map {|tag| tag.id}
+
 # 3.times do |i|
 #   user = User.find_or_create_by!(email: "user00#{i+1}@test.com") do |_user|
 #     _user.password = "test1234"
@@ -47,6 +56,7 @@ end
 #   50.times do |ii|
 #     user.articles.find_or_create_by!(title: "No.#{ii+1}:user00#{ii+1}の記事") do |article|
 #       article.content = "user00#{ii+1}の記事の内容"
+#       article.tag_ids = tag_ids
 #     end
 #   end
 # end

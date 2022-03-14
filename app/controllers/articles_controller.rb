@@ -4,7 +4,7 @@ class ArticlesController < ApplicationController
   # GET /articles
 
   def index
-    @articles = Article.page(params[:page]).per(25)
+    @articles = Article.includes(:tags).page(params[:page]).per(25)
   end
 
   # GET /articles/:id
@@ -23,6 +23,7 @@ class ArticlesController < ApplicationController
 
   # POST /articles
   def create
+    binding.pry
     @article = current_user.articles.new(article_params)
       respond_to do |format|
         if @article.save
@@ -66,6 +67,6 @@ class ArticlesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def article_params
-      params.require(:article).permit(:title, :content)
+      params.require(:article).permit(:title, :content, tag_ids: [])
     end
 end
