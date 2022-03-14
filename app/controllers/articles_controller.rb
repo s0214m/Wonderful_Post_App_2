@@ -4,7 +4,7 @@ class ArticlesController < ApplicationController
   # GET /articles
 
   def index
-    @articles = Article.all
+    @articles = Article.page(params[:page]).per(25)
   end
 
   # GET /articles/:id
